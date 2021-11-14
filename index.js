@@ -23,6 +23,7 @@ async function run() {
         const productsCollection = database.collection('products');
         const ordersCollection = database.collection('orders');
         const usersCollection = database.collection('users');
+        const reviewsCollection = database.collection('reviews')
 
         //  get all products
         app.get('/products', async (req, res) => {
@@ -69,12 +70,10 @@ async function run() {
             res.json(result);
         })
         //  user add and admin check
-
         // user add post
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
-            console.log(result);
             res.json(result);
         })
 
@@ -116,6 +115,19 @@ async function run() {
             res.json({ admin: isAdmin })
         })
 
+
+        //  post review collection
+        app.post('/reviews', async (req, res) => {
+            const review = req.body;
+            const result = await reviewsCollection.insertOne(review);
+            res.json(result)
+        })
+        // get reviews collections
+        app.get('/reviews', async (req, res) => {
+            const cursor = reviewsCollection.find({});
+            const reviews = await cursor.toArray();
+            res.send(reviews)
+        })
     }
     finally {
         // await client.close():
